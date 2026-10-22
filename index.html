@@ -51,13 +51,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .aba[aria-pressed="true"] { background: var(--marca); color: var(--bg); }
 .aba .n { opacity: .7; font-weight: 500; margin-left: 4px; }
 .barra { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
-.btn-filtro { flex: none; width: 88px; justify-content: center; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--linha); background: var(--card); padding: 7px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; }
+.btn-filtro { flex: none; width: 104px; white-space: nowrap; justify-content: center; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--linha); background: var(--card); padding: 7px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; }
 .btn-filtro .qtd { background: var(--marca); color: var(--bg); border-radius: 999px; font-size: 12px; min-width: 20px; height: 20px; display: inline-grid; place-items: center; padding: 0 6px; }
 .chips { display: flex; gap: 6px; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none; }
 .chip { flex: none; border: 1px solid var(--linha); background: var(--card); padding: 6px 11px; border-radius: 999px; font-size: 13px; }
 .chip[aria-pressed="true"] { border-color: var(--marca); color: var(--marca); font-weight: 700; background: var(--verde-bg); }
 select { font: inherit; font-size: 14px; padding: 7px 8px; border-radius: 10px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); }
-.rot-ordem { flex: none; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--suave); width: 88px; text-align: center; }
+.rot-ordem { flex: none; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--suave); width: 104px; text-align: center; }
 .ord { flex: none; border: 0; background: var(--chip); padding: 6px 11px; border-radius: 999px; font-size: 13px; }
 .ord[aria-pressed="true"] { background: var(--texto); color: var(--bg); font-weight: 700; }
 .resumo { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 13px; color: var(--suave); }
@@ -148,7 +148,7 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
     <div class="status" id="status">Carregando…</div>
     <nav class="abas" id="abas"></nav>
     <div class="barra">
-      <button class="btn-filtro" id="abrirFiltros">⚙︎ Filtros<span class="qtd" id="qtdFiltros" hidden></span></button>
+      <button class="btn-filtro" id="abrirFiltros">Filtros<span class="qtd" id="qtdFiltros" hidden></span></button>
       <div class="chips" id="chips"></div>
     </div>
     <div class="barra"><span class="rot-ordem">Ordenar</span><div class="chips" id="ordem"></div></div>
@@ -212,6 +212,7 @@ const ehAuto = l => l.cambio && l.cambio !== 'Manual';
 
 // "Renault Logan Zen Flex 1.6 16V 4P Mec." -> "Logan Zen 1.6"
 function nomeCurto(l) {
+  if (l.fonte === 'facebook') return l.modelo.split(' ').slice(1).join(' ');
   const v = (l.versao || l.titulo || '').replace(/\b(flex|hi-?flex|hi-?power|flexstart|flex ?fuel|sce|16v|8v|12v|[45]p|mec\.?|aut\.?)\b/gi, '').replace(/\s+/g, ' ').trim();
   const ate = v.match(/^(.*?\d\.\d)/);
   return (ate ? ate[1] : v).trim();
@@ -334,7 +335,7 @@ function filtrar() {
 function selo(l) {
   const d = l.desconto_pct;
   if (d == null) return '';
-  return `<span class="selo ${d >= 10 ? '' : d >= 5 ? 'medio' : 'fraco'}">−${Math.abs(d).toFixed(0)}%</span>`;
+  return `<span class="selo ${d >= 10 ? '' : d >= 5 ? 'medio' : 'fraco'}">${d < 1 ? 'na FIPE' : `−${d.toFixed(0)}%`}</span>`;
 }
 
 function card(l) {
