@@ -73,6 +73,8 @@ main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 1
 .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .selo { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 6px; font-weight: 800; font-size: 13px; color: #fff; background: #0f7a45; }
 .selo.medio { background: #2f7d4f; } .selo.fraco { background: #5b6a60; }
+.fonte { position: absolute; bottom: 6px; right: 6px; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; color: #fff; background: rgba(0,0,0,.55); }
+.fonte.fb { background: #1877f2; }
 .novo { position: absolute; bottom: 6px; left: 6px; background: #fff; color: #111; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; letter-spacing: .04em; }
 .estrela { position: absolute; top: 4px; right: 4px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(0,0,0,.42); color: #fff; font-size: 17px; display: grid; place-items: center; }
 .estrela[aria-pressed="true"] { background: #f2b705; color: #3a2a00; }
@@ -184,7 +186,7 @@ const guardar = (chave, valor) => { try { localStorage.setItem(chave, JSON.strin
 
 const FILTROS_VAZIOS = {
   modelos: [], precoMin: null, precoMax: null, anoMin: null, anoMax: null, kmMax: null, distMax: null,
-  descMin: null, cambio: [], carroceria: [], vendedor: null, completo: false, semAlerta: false, comFipe: false,
+  descMin: null, cambio: [], carroceria: [], fonte: [], vendedor: null, completo: false, semAlerta: false, comFipe: false,
 };
 
 let dados = null;
@@ -228,6 +230,7 @@ function passa(l) {
   if (f.descMin != null && (l.desconto_pct == null || l.desconto_pct < f.descMin)) return false;
   if (f.cambio.length && !f.cambio.includes(ehAuto(l) ? 'Automático' : 'Manual')) return false;
   if (f.carroceria.length && !f.carroceria.includes(l.carroceria)) return false;
+  if (f.fonte.length && !f.fonte.includes(l.fonte || 'olx')) return false;
   if (f.vendedor === 'loja' && !l.loja) return false;
   if (f.vendedor === 'particular' && l.loja) return false;
   if (f.completo && !l.completo) return false;
@@ -239,7 +242,7 @@ function passa(l) {
 function qtdFiltrosAtivos() {
   const f = estado.f;
   return [f.modelos.length, f.precoMin || f.precoMax, f.anoMin || f.anoMax, f.kmMax, f.distMax, f.descMin != null,
-    f.cambio.length, f.carroceria.length, f.vendedor, f.completo, f.semAlerta, f.comFipe].filter(Boolean).length;
+    f.cambio.length, f.carroceria.length, f.fonte.length, f.vendedor, f.completo, f.semAlerta, f.comFipe].filter(Boolean).length;
 }
 
 const salvarFiltros = () => { guardar('filtros', estado.f); desenhar(); desenharFiltros(); };
@@ -258,6 +261,8 @@ function desenharFiltros() {
   $('filtrosCorpo').innerHTML = `
     <div class="grupo"><span class="rotulo">Modelo</span><div class="opcoes">
       ${dados.modelos.map(m => opcao('modelos', m, m, f.modelos.includes(m))).join('')}</div></div>
+    <div class="grupo"><span class="rotulo">Onde está anunciado</span><div class="opcoes">
+      ${[['olx', 'OLX'], ['facebook', 'Facebook Marketplace']].map(([v, r]) => opcao('fonte', v, r, f.fonte.includes(v))).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Abaixo da FIPE</span><div class="opcoes">
       ${[[null, 'Qualquer'], [5, '5% ou mais'], [10, '10% ou mais'], [15, '15% ou mais'], [20, '20% ou mais']]
         .map(([v, r]) => opcao('descMin', v ?? '', r, f.descMin === v)).join('')}</div></div>
@@ -340,6 +345,7 @@ function card(l) {
     <div class="thumb">
       ${l.fotos?.[0] ? `<img src="${esc(l.fotos[0])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
       ${selo(l)}${ehNovo(l) ? '<span class="novo">NOVO</span>' : ''}
+      <span class="fonte ${l.fonte === 'facebook' ? 'fb' : ''}">${l.fonte === 'facebook' ? 'Facebook' : 'OLX'}</span>
       <button class="estrela" data-acao="salvo" aria-pressed="${marcas[l.id] === 'salvo'}" aria-label="Salvar">★</button>
     </div>
     <div class="info">
@@ -409,7 +415,7 @@ function detalhe(l) {
       <div class="meta"><span>${l.km != null ? l.km.toLocaleString('pt-BR') + ' km' : 'km ?'}</span><span>📍 ${esc(l.cidade || '?')}${l.distancia_km != null ? ` · ${l.distancia_km} km` : ''}</span><span>${l.loja ? 'Loja' : 'Particular'}</span><span>${l.publicado_em ? haQuanto(l.publicado_em) : ''}</span></div>
       ${alertas.length ? `<div class="alertas">${alertas.join('')}</div>` : ''}
       <div class="acoes">
-        <a class="btn principal" href="${esc(l.url)}" target="_blank" rel="noopener">Ver na OLX</a>
+        <a class="btn principal" href="${esc(l.url)}" target="_blank" rel="noopener">${l.fonte === 'facebook' ? 'Ver no Facebook' : 'Ver na OLX'}</a>
         <button class="btn sec" data-acao="salvo" aria-pressed="${m === 'salvo'}" aria-label="Salvar">★</button>
         <button class="btn sec desc" data-acao="descartado" aria-pressed="${m === 'descartado'}" aria-label="Descartar">✕</button>
       </div>
