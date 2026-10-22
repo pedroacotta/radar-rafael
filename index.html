@@ -36,34 +36,69 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--texto); }
 body { font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-.topo { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: calc(env(safe-area-inset-top) + 12px) 16px 8px; border-bottom: 1px solid var(--linha); }
-.topo h1 { margin: 0; font-size: 22px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
-.topo h1 .ponto { width: 10px; height: 10px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 4px var(--verde-bg); }
-.status { color: var(--suave); font-size: 13px; margin-top: 2px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+[hidden] { display: none !important; }
+
+/* ---------- topo ---------- */
+.topo { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: calc(env(safe-area-inset-top) + 10px) 16px 10px; border-bottom: 1px solid var(--linha); }
+.topo-int { max-width: 1100px; margin: 0 auto; }
+.topo h1 { margin: 0; font-size: 20px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+.topo h1 .ponto { width: 9px; height: 9px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 4px var(--verde-bg); }
+.status { color: var(--suave); font-size: 13px; margin-top: 1px; }
 .abas { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
 .abas::-webkit-scrollbar, .chips::-webkit-scrollbar { display: none; }
-.aba { flex: none; border: 0; background: var(--chip); color: var(--texto); padding: 8px 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; }
+.aba { flex: none; border: 0; background: var(--chip); padding: 7px 13px; border-radius: 999px; font-size: 14px; font-weight: 600; }
 .aba[aria-pressed="true"] { background: var(--marca); color: var(--bg); }
 .aba .n { opacity: .7; font-weight: 500; margin-left: 4px; }
-.filtros { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
-.chips { display: flex; gap: 6px; overflow-x: auto; flex: 1; scrollbar-width: none; }
-.chip { flex: none; border: 1px solid var(--linha); background: var(--card); color: var(--texto); padding: 6px 11px; border-radius: 999px; font: inherit; font-size: 13px; }
-.chip[aria-pressed="true"] { border-color: var(--marca); color: var(--marca); font-weight: 600; }
-select { font: inherit; font-size: 13px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); }
-main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 720px; margin: 0 auto; }
-.vazio { text-align: center; color: var(--suave); padding: 48px 16px; }
-.lead { background: var(--card); border-radius: 14px; box-shadow: var(--sombra); margin-bottom: 14px; overflow: hidden; border: 1px solid var(--linha); }
-.foto { position: relative; aspect-ratio: 16/10; background: var(--chip); display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-.foto::-webkit-scrollbar { display: none; }
-.foto img { flex: none; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
-.selo { position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 8px; font-weight: 800; font-size: 15px; background: #0f7a45; color: #fff; }
+.barra { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+.btn-filtro { flex: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--linha); background: var(--card); padding: 7px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; }
+.btn-filtro .qtd { background: var(--marca); color: var(--bg); border-radius: 999px; font-size: 12px; min-width: 20px; height: 20px; display: inline-grid; place-items: center; padding: 0 6px; }
+.chips { display: flex; gap: 6px; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none; }
+.chip { flex: none; border: 1px solid var(--linha); background: var(--card); padding: 6px 11px; border-radius: 999px; font-size: 13px; }
+.chip[aria-pressed="true"] { border-color: var(--marca); color: var(--marca); font-weight: 700; background: var(--verde-bg); }
+select { font: inherit; font-size: 14px; padding: 7px 8px; border-radius: 10px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); }
+.resumo { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; color: var(--suave); }
+.resumo button { border: 0; background: none; color: var(--marca); font-weight: 700; font-size: 13px; padding: 0; }
+
+/* ---------- grade ---------- */
+main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 1132px; margin: 0 auto; }
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 10px; }
+@media (min-width: 700px) { .grade { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; } }
+.card { background: var(--card); border: 1px solid var(--linha); border-radius: 12px; overflow: hidden; box-shadow: var(--sombra); display: flex; flex-direction: column; cursor: pointer; text-align: left; padding: 0; }
+.card.descartado { opacity: .55; }
+.thumb { position: relative; aspect-ratio: 4/3; background: var(--chip); overflow: hidden; }
+.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.selo { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 6px; font-weight: 800; font-size: 13px; color: #fff; background: #0f7a45; }
 .selo.medio { background: #2f7d4f; } .selo.fraco { background: #5b6a60; }
-.novo { position: absolute; top: 10px; right: 10px; background: #fff; color: #111; font-size: 12px; font-weight: 800; padding: 4px 8px; border-radius: 6px; letter-spacing: .04em; }
-.contagem-fotos { position: absolute; bottom: 8px; right: 10px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; padding: 2px 7px; border-radius: 6px; }
-.corpo { padding: 12px 14px 14px; }
-.titulo { font-weight: 700; font-size: 16px; margin: 0 0 6px; }
+.novo { position: absolute; bottom: 6px; left: 6px; background: #fff; color: #111; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; letter-spacing: .04em; }
+.estrela { position: absolute; top: 4px; right: 4px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(0,0,0,.42); color: #fff; font-size: 17px; display: grid; place-items: center; }
+.estrela[aria-pressed="true"] { background: #f2b705; color: #3a2a00; }
+.info { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.nome { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.preco-p { font-size: 18px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.margem-p { font-size: 12.5px; font-weight: 700; color: var(--verde); font-variant-numeric: tabular-nums; }
+.margem-p.neg { color: var(--vermelho); } .margem-p.sem { color: var(--suave); font-weight: 500; }
+.meta-p { font-size: 12px; color: var(--suave); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aviso-p { font-size: 11.5px; font-weight: 700; color: var(--ambar); }
+.vazio { text-align: center; color: var(--suave); padding: 48px 16px; }
+.rodape { text-align: center; color: var(--suave); font-size: 12px; margin-top: 24px; }
+
+/* ---------- janelas (detalhe e filtros) ---------- */
+dialog { border: 0; padding: 0; background: var(--card); color: var(--texto); width: 100%; max-width: 560px; max-height: 100dvh; height: 100dvh; margin: 0 auto; }
+@media (min-width: 700px) { dialog { height: auto; max-height: 92dvh; margin: auto; border-radius: 16px; } }
+dialog::backdrop { background: rgba(0,0,0,.5); }
+.jan-topo { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: calc(env(safe-area-inset-top) + 8px) 12px 8px 16px; background: var(--card); border-bottom: 1px solid var(--linha); }
+.jan-topo h2 { margin: 0; font-size: 17px; }
+.fechar { border: 0; background: var(--chip); width: 38px; height: 38px; border-radius: 50%; font-size: 18px; }
+.jan-corpo { padding: 14px 16px calc(env(safe-area-inset-bottom) + 20px); }
+
+.fotos { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; aspect-ratio: 4/3; background: var(--chip); }
+.fotos::-webkit-scrollbar { display: none; }
+.fotos img { flex: none; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
+.fotos-n { text-align: right; color: var(--suave); font-size: 12px; padding: 4px 16px 0; }
+.titulo { font-weight: 700; font-size: 17px; margin: 0 0 6px; }
 .precos { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.preco { font-size: 24px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.preco { font-size: 26px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .fipe { color: var(--suave); font-size: 14px; font-variant-numeric: tabular-nums; }
 .margem { color: var(--verde); font-weight: 700; font-size: 14px; }
 .margem.neg { color: var(--vermelho); }
@@ -72,65 +107,100 @@ main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 7
 .alertas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .alerta { background: var(--ambar-bg); color: var(--ambar); font-size: 12.5px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
 .alerta.ok { background: var(--verde-bg); color: var(--verde); }
-.acoes { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 12px; }
-.btn { border: 0; border-radius: 10px; padding: 11px 12px; font: inherit; font-size: 15px; font-weight: 700; text-align: center; text-decoration: none; cursor: pointer; }
+.acoes { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 14px; }
+.btn { border: 0; border-radius: 10px; padding: 12px; font-size: 15px; font-weight: 700; text-align: center; text-decoration: none; }
 .btn.principal { background: var(--marca); color: var(--bg); }
-.btn.sec { background: var(--chip); color: var(--texto); min-width: 48px; }
+.btn.sec { background: var(--chip); min-width: 52px; }
 .btn.sec[aria-pressed="true"] { background: var(--verde-bg); color: var(--verde); }
 .btn.desc[aria-pressed="true"] { background: var(--vermelho-bg); color: var(--vermelho); }
-details { margin-top: 10px; border-top: 1px solid var(--linha); padding-top: 8px; }
-summary { cursor: pointer; color: var(--suave); font-size: 14px; font-weight: 600; }
-.ficha { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; margin: 10px 0; }
+.secao { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--suave); margin: 18px 0 8px; }
+.ficha { display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; font-size: 14px; margin: 0; }
 .ficha dt { color: var(--suave); } .ficha dd { margin: 0; }
-.descricao { white-space: pre-wrap; font-size: 14px; color: var(--texto); background: var(--bg); padding: 10px; border-radius: 8px; max-height: 260px; overflow: auto; }
-.rodape { text-align: center; color: var(--suave); font-size: 12px; margin-top: 24px; }
+.descricao { white-space: pre-wrap; font-size: 14px; background: var(--bg); padding: 10px; border-radius: 8px; }
+
+.grupo { margin-bottom: 18px; }
+.grupo > label, .grupo > .rotulo { display: block; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.opcoes { display: flex; flex-wrap: wrap; gap: 6px; }
+.faixa { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; color: var(--suave); font-size: 14px; }
+.faixa input, .faixa select { width: 100%; font: inherit; font-size: 16px; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--linha); background: var(--bg); color: var(--texto); }
+.liga { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--linha); font-size: 15px; }
+.liga input { width: 22px; height: 22px; accent-color: var(--marca); }
+.jan-rodape { position: sticky; bottom: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px; padding: 10px 16px calc(env(safe-area-inset-bottom) + 10px); background: var(--card); border-top: 1px solid var(--linha); }
+
+/* ---------- senha ---------- */
 .cadeado { max-width: 340px; margin: 18vh auto 0; padding: 0 16px; text-align: center; }
 .cadeado h2 { margin: 0 0 6px; font-size: 20px; }
 .cadeado p { color: var(--suave); margin: 0 0 18px; font-size: 15px; }
-.cadeado input { width: 100%; font: inherit; font-size: 18px; padding: 13px 14px; border-radius: 10px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); text-align: center; }
+.cadeado input { width: 100%; font: inherit; font-size: 22px; letter-spacing: .3em; padding: 13px 14px; border-radius: 10px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); text-align: center; }
 .cadeado .btn { width: 100%; margin-top: 10px; }
 .cadeado .erro { color: var(--vermelho); font-size: 14px; min-height: 20px; margin-top: 8px; }
-[hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <header class="topo">
-  <h1><span class="ponto"></span>Radar do Rafael</h1>
-  <div class="status" id="status">Carregando…</div>
-  <nav class="abas" id="abas"></nav>
-  <div class="filtros">
-    <div class="chips" id="chips"></div>
-    <select id="ordem" aria-label="Ordenar">
-      <option value="nota">Melhor negócio</option>
-      <option value="desconto">Maior desconto</option>
-      <option value="recente">Mais novos</option>
-      <option value="perto">Mais perto</option>
-      <option value="preco">Menor preço</option>
-    </select>
+  <div class="topo-int">
+    <h1><span class="ponto"></span>Radar do Rafael</h1>
+    <div class="status" id="status">Carregando…</div>
+    <nav class="abas" id="abas"></nav>
+    <div class="barra">
+      <button class="btn-filtro" id="abrirFiltros">⚙︎ Filtros<span class="qtd" id="qtdFiltros" hidden></span></button>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="resumo">
+      <span id="contagem"></span>
+      <select id="ordem" aria-label="Ordenar">
+        <option value="nota">Melhor negócio</option>
+        <option value="desconto">Maior desconto</option>
+        <option value="margem">Maior margem (R$)</option>
+        <option value="recente">Mais novos</option>
+        <option value="perto">Mais perto</option>
+        <option value="preco">Menor preço</option>
+        <option value="km">Menos km</option>
+        <option value="ano">Mais novo (ano)</option>
+      </select>
+    </div>
   </div>
 </header>
 <main id="lista"></main>
+
+<dialog id="detalhe"></dialog>
+
+<dialog id="filtros">
+  <div class="jan-topo"><h2>Filtros</h2><button class="fechar" data-fechar aria-label="Fechar">✕</button></div>
+  <div class="jan-corpo" id="filtrosCorpo"></div>
+  <div class="jan-rodape">
+    <button class="btn sec" id="limparFiltros">Limpar</button>
+    <button class="btn principal" data-fechar id="verResultado">Ver carros</button>
+  </div>
+</dialog>
+
 <form class="cadeado" id="cadeado" hidden>
   <h2>🔒 Digite a senha</h2>
   <p>Só precisa fazer isso uma vez neste celular.</p>
-  <input id="senha" type="password" autocomplete="current-password" autocapitalize="none" placeholder="senha">
+  <input id="senha" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••">
   <button class="btn principal" type="submit">Entrar</button>
   <div class="erro" id="erro"></div>
 </form>
 
 <script>
 const fmt = n => n == null ? '—' : 'R$ ' + n.toLocaleString('pt-BR');
-const km = n => n == null ? 'km ?' : n.toLocaleString('pt-BR') + ' km';
+const mil = n => n == null ? '?' : n >= 1000 ? Math.round(n / 1000) + ' mil' : String(n);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const $ = id => document.getElementById(id);
 
 const guardado = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) ?? padrao; } catch { return padrao; } };
 const guardar = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch {} };
 
+const FILTROS_VAZIOS = {
+  modelos: [], precoMin: null, precoMax: null, anoMin: null, anoMax: null, kmMax: null, distMax: null,
+  descMin: null, cambio: [], carroceria: [], vendedor: null, completo: false, semAlerta: false, comFipe: false,
+};
+
 let dados = null;
 let marcas = guardado('marcas', {});            // id -> 'salvo' | 'descartado'
 const ultimaVisita = guardado('ultimaVisita', null);
-const estado = { aba: 'todos', modelo: null, ordem: guardado('ordem', 'nota') };
-document.getElementById('ordem').value = estado.ordem;
+const estado = { aba: 'todos', ordem: guardado('ordem', 'nota'), f: { ...FILTROS_VAZIOS, ...guardado('filtros', {}) } };
+$('ordem').value = estado.ordem;
 
 function haQuanto(iso) {
   const min = Math.round((Date.now() - new Date(iso)) / 60000);
@@ -143,62 +213,149 @@ function haQuanto(iso) {
 }
 
 const ehNovo = l => ultimaVisita && l.primeiro_visto > ultimaVisita;
+const ehAuto = l => l.cambio && l.cambio !== 'Manual';
 
+// "Renault Logan Zen Flex 1.6 16V 4P Mec." -> "Logan Zen 1.6"
+function nomeCurto(l) {
+  const v = (l.versao || l.titulo || '').replace(/\b(flex|hi-?flex|hi-?power|flexstart|flex ?fuel|sce|16v|8v|12v|[45]p|mec\.?|aut\.?)\b/gi, '').replace(/\s+/g, ' ').trim();
+  const ate = v.match(/^(.*?\d\.\d)/);
+  return (ate ? ate[1] : v).trim();
+}
+
+/* ---------- filtros ---------- */
+function passa(l) {
+  const f = estado.f;
+  if (f.modelos.length && !f.modelos.includes(l.modelo)) return false;
+  if (f.precoMin && l.preco < f.precoMin) return false;
+  if (f.precoMax && l.preco > f.precoMax) return false;
+  if (f.anoMin && l.ano < f.anoMin) return false;
+  if (f.anoMax && l.ano > f.anoMax) return false;
+  if (f.kmMax && (l.km == null || l.km > f.kmMax)) return false;
+  if (f.distMax && (l.distancia_km == null || l.distancia_km > f.distMax)) return false;
+  if (f.descMin != null && (l.desconto_pct == null || l.desconto_pct < f.descMin)) return false;
+  if (f.cambio.length && !f.cambio.includes(ehAuto(l) ? 'Automático' : 'Manual')) return false;
+  if (f.carroceria.length && !f.carroceria.includes(l.carroceria)) return false;
+  if (f.vendedor === 'loja' && !l.loja) return false;
+  if (f.vendedor === 'particular' && l.loja) return false;
+  if (f.completo && !l.completo) return false;
+  if (f.semAlerta && l.alertas?.length) return false;
+  if (f.comFipe && !l.fipe) return false;
+  return true;
+}
+
+function qtdFiltrosAtivos() {
+  const f = estado.f;
+  return [f.modelos.length, f.precoMin || f.precoMax, f.anoMin || f.anoMax, f.kmMax, f.distMax, f.descMin != null,
+    f.cambio.length, f.carroceria.length, f.vendedor, f.completo, f.semAlerta, f.comFipe].filter(Boolean).length;
+}
+
+const salvarFiltros = () => { guardar('filtros', estado.f); desenhar(); desenharFiltros(); };
+
+const opcao = (grupo, valor, rotulo, ativo) =>
+  `<button class="chip" data-f="${grupo}" data-v="${esc(valor)}" aria-pressed="${ativo}">${esc(rotulo)}</button>`;
+
+function desenharFiltros() {
+  const f = estado.f;
+  const anos = [...new Set(dados.leads.map(l => l.ano).filter(Boolean))].sort();
+  const selAno = (campo, rot) => `<select data-campo="${campo}"><option value="">${rot}</option>${anos.map(a =>
+    `<option ${f[campo] === a ? 'selected' : ''}>${a}</option>`).join('')}</select>`;
+  const carrocerias = [...new Set(dados.leads.map(l => l.carroceria).filter(Boolean))];
+  const total = dados.leads.filter(l => passa(l) && marcas[l.id] !== 'descartado').length;
+  $('verResultado').textContent = total ? `Ver ${total} carro${total > 1 ? 's' : ''}` : 'Nenhum carro';
+  $('filtrosCorpo').innerHTML = `
+    <div class="grupo"><span class="rotulo">Modelo</span><div class="opcoes">
+      ${dados.modelos.map(m => opcao('modelos', m, m, f.modelos.includes(m))).join('')}</div></div>
+    <div class="grupo"><span class="rotulo">Abaixo da FIPE</span><div class="opcoes">
+      ${[[null, 'Qualquer'], [5, '5% ou mais'], [10, '10% ou mais'], [15, '15% ou mais'], [20, '20% ou mais']]
+        .map(([v, r]) => opcao('descMin', v ?? '', r, f.descMin === v)).join('')}</div></div>
+    <div class="grupo"><span class="rotulo">Preço</span><div class="faixa">
+      <input type="number" inputmode="numeric" step="1000" placeholder="mín. 30.000" data-campo="precoMin" value="${f.precoMin ?? ''}">
+      <span>até</span>
+      <input type="number" inputmode="numeric" step="1000" placeholder="máx. 50.000" data-campo="precoMax" value="${f.precoMax ?? ''}"></div></div>
+    <div class="grupo"><span class="rotulo">Ano</span><div class="faixa">${selAno('anoMin', 'de')}<span>até</span>${selAno('anoMax', 'até')}</div></div>
+    <div class="grupo"><span class="rotulo">Quilometragem</span><div class="opcoes">
+      ${[[null, 'Qualquer'], [60000, 'até 60 mil'], [90000, 'até 90 mil'], [120000, 'até 120 mil'], [150000, 'até 150 mil']]
+        .map(([v, r]) => opcao('kmMax', v ?? '', r, f.kmMax === v)).join('')}</div></div>
+    <div class="grupo"><span class="rotulo">Distância de ${esc(dados.base)}</span><div class="opcoes">
+      ${[[null, 'Até ' + dados.raio_km + ' km'], [50, 'até 50 km'], [100, 'até 100 km'], [150, 'até 150 km']]
+        .map(([v, r]) => opcao('distMax', v ?? '', r, f.distMax === v)).join('')}</div></div>
+    <div class="grupo"><span class="rotulo">Carroceria</span><div class="opcoes">
+      ${carrocerias.map(c => opcao('carroceria', c, c, f.carroceria.includes(c))).join('')}</div></div>
+    <div class="grupo"><span class="rotulo">Câmbio</span><div class="opcoes">
+      ${['Manual', 'Automático'].map(c => opcao('cambio', c, c, f.cambio.includes(c))).join('')}</div></div>
+    <div class="grupo"><span class="rotulo">Vendedor</span><div class="opcoes">
+      ${[[null, 'Todos'], ['particular', 'Particular'], ['loja', 'Loja']].map(([v, r]) => opcao('vendedor', v ?? '', r, f.vendedor === v)).join('')}</div></div>
+    <label class="liga">Só completos (ar, vidro e trava)<input type="checkbox" data-campo="completo" ${f.completo ? 'checked' : ''}></label>
+    <label class="liga">Esconder carros com alerta ⚠<input type="checkbox" data-campo="semAlerta" ${f.semAlerta ? 'checked' : ''}></label>
+    <label class="liga">Só com FIPE conhecida<input type="checkbox" data-campo="comFipe" ${f.comFipe ? 'checked' : ''}></label>`;
+}
+
+$('filtrosCorpo').addEventListener('click', e => {
+  const b = e.target.closest('[data-f]');
+  if (!b) return;
+  const { f: grupo, v } = b.dataset;
+  const f = estado.f;
+  if (Array.isArray(f[grupo])) {
+    f[grupo] = f[grupo].includes(v) ? f[grupo].filter(x => x !== v) : [...f[grupo], v];
+  } else {
+    const valor = v === '' ? null : isNaN(v) ? v : Number(v);
+    f[grupo] = f[grupo] === valor ? null : valor;
+  }
+  salvarFiltros();
+});
+$('filtrosCorpo').addEventListener('change', e => {
+  const c = e.target.dataset.campo;
+  if (!c) return;
+  estado.f[c] = e.target.type === 'checkbox' ? e.target.checked : (e.target.value === '' ? null : Number(e.target.value));
+  salvarFiltros();
+});
+$('limparFiltros').addEventListener('click', () => { estado.f = { ...FILTROS_VAZIOS }; salvarFiltros(); });
+$('abrirFiltros').addEventListener('click', () => { desenharFiltros(); abrirJanela($('filtros')); });
+
+/* ---------- lista ---------- */
 function filtrar() {
-  let ls = dados.leads.filter(l => !estado.modelo || l.modelo === estado.modelo);
   const porAba = {
     todos: l => marcas[l.id] !== 'descartado',
     novos: l => ehNovo(l) && marcas[l.id] !== 'descartado',
     salvos: l => marcas[l.id] === 'salvo',
     descartados: l => marcas[l.id] === 'descartado',
   };
-  ls = ls.filter(porAba[estado.aba]);
   const ord = {
     nota: (a, b) => b.nota - a.nota,
     desconto: (a, b) => (b.desconto_pct ?? -99) - (a.desconto_pct ?? -99),
+    margem: (a, b) => (b.margem ?? -1e9) - (a.margem ?? -1e9),
     recente: (a, b) => (b.publicado_em || '').localeCompare(a.publicado_em || ''),
     perto: (a, b) => (a.distancia_km ?? 999) - (b.distancia_km ?? 999),
     preco: (a, b) => a.preco - b.preco,
+    km: (a, b) => (a.km ?? 1e9) - (b.km ?? 1e9),
+    ano: (a, b) => b.ano - a.ano || b.nota - a.nota,
   };
-  return ls.sort(ord[estado.ordem]);
+  return dados.leads.filter(l => passa(l) && porAba[estado.aba](l)).sort(ord[estado.ordem]);
 }
 
-function cartao(l) {
+function selo(l) {
   const d = l.desconto_pct;
-  const selo = d == null ? '' : `<span class="selo ${d >= 10 ? '' : d >= 5 ? 'medio' : 'fraco'}">${d > 0 ? '−' : '+'}${Math.abs(d).toFixed(0)}% FIPE</span>`;
-  const fotos = (l.fotos || []).map((f, i) => `<img src="${esc(f)}" alt="" loading="lazy" referrerpolicy="no-referrer" ${i ? '' : 'fetchpriority="high"'}>`).join('');
-  const hist = l.historico_preco || [];
-  const baixou = hist.length > 1 && hist[0].preco > l.preco ? `<span class="baixou">↓ baixou de ${fmt(hist[0].preco)}</span>` : '';
-  const alertas = (l.alertas || []).map(a => `<span class="alerta">⚠ ${esc(a)}</span>`);
-  if (l.completo) alertas.unshift('<span class="alerta ok">✓ completo</span>');
-  const fipeTxt = l.fipe ? `FIPE ${fmt(l.fipe)}${l.fipe_fonte === 'FIPE estimada' ? '*' : ''}` : 'FIPE ?';
-  const margem = l.margem != null ? `<span class="margem ${l.margem < 0 ? 'neg' : ''}">${l.margem >= 0 ? '+' : '−'}${fmt(Math.abs(l.margem))} margem</span>` : '';
-  const ficha = [
-    ['Versão', l.versao], ['Ano', l.ano], ['Câmbio', l.cambio], ['Direção', l.direcao], ['Cor', l.cor],
-    ['Combustível', l.combustivel], ['IPVA pago', l.ipva_pago], ['Quitado', l.quitado], ['Único dono', l.unico_dono],
-    ['Aceita troca', l.aceita_troca], ['Vendedor', l.vendedor && `${l.vendedor}${l.loja ? ' (loja)' : ''}`],
-    ['Publicado', l.publicado_em && new Date(l.publicado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })],
-    ['FIPE', l.fipe && `${fmt(l.fipe)} (${l.fipe_fonte})`],
-  ].filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
-  const m = marcas[l.id];
-  return `<article class="lead" data-id="${esc(l.id)}">
-    <div class="foto">${fotos}${selo}${ehNovo(l) ? '<span class="novo">NOVO</span>' : ''}${l.fotos?.length > 1 ? `<span class="contagem-fotos">${l.fotos.length} fotos ›</span>` : ''}</div>
-    <div class="corpo">
-      <h2 class="titulo">${esc(l.titulo)}</h2>
-      <div class="precos"><span class="preco">${fmt(l.preco)}</span><span class="fipe">${fipeTxt}</span>${margem}</div>
-      ${baixou}
-      <div class="meta"><span>${km(l.km)}</span><span>📍 ${esc(l.cidade || '?')}${l.distancia_km != null ? ` · ${l.distancia_km} km` : ''}</span><span>${l.loja ? 'Loja' : 'Particular'}</span><span>${l.publicado_em ? haQuanto(l.publicado_em) : ''}</span></div>
-      ${alertas.length ? `<div class="alertas">${alertas.join('')}</div>` : ''}
-      <div class="acoes">
-        <a class="btn principal" href="${esc(l.url)}" target="_blank" rel="noopener">Ver na OLX</a>
-        <button class="btn sec" data-acao="salvo" aria-pressed="${m === 'salvo'}" aria-label="Salvar">★</button>
-        <button class="btn sec desc" data-acao="descartado" aria-pressed="${m === 'descartado'}" aria-label="Descartar">✕</button>
-      </div>
-      <details><summary>Ficha, opcionais e descrição</summary>
-        <dl class="ficha">${ficha}</dl>
-        ${l.opcionais?.length ? `<p style="font-size:14px;margin:0 0 10px"><b>Opcionais:</b> ${esc(l.opcionais.join(', '))}</p>` : ''}
-        ${l.descricao ? `<div class="descricao">${esc(l.descricao)}</div>` : ''}
-      </details>
+  if (d == null) return '';
+  return `<span class="selo ${d >= 10 ? '' : d >= 5 ? 'medio' : 'fraco'}">−${Math.abs(d).toFixed(0)}%</span>`;
+}
+
+function card(l) {
+  const m = l.margem;
+  const margem = m == null ? '<span class="margem-p sem">FIPE não encontrada</span>'
+    : `<span class="margem-p ${m < 0 ? 'neg' : ''}">${m >= 0 ? '+' : '−'}${fmt(Math.abs(m))} da FIPE</span>`;
+  return `<article class="card ${marcas[l.id] === 'descartado' ? 'descartado' : ''}" data-id="${esc(l.id)}" tabindex="0">
+    <div class="thumb">
+      ${l.fotos?.[0] ? `<img src="${esc(l.fotos[0])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
+      ${selo(l)}${ehNovo(l) ? '<span class="novo">NOVO</span>' : ''}
+      <button class="estrela" data-acao="salvo" aria-pressed="${marcas[l.id] === 'salvo'}" aria-label="Salvar">★</button>
+    </div>
+    <div class="info">
+      <div class="nome">${esc(nomeCurto(l))}</div>
+      <div class="preco-p">${fmt(l.preco)}</div>
+      ${margem}
+      <div class="meta-p"><b>${l.ano ?? '?'}</b> · ${mil(l.km)} km</div>
+      <div class="meta-p">📍 ${esc(l.cidade || '?')}${l.distancia_km != null ? ` · ${l.distancia_km} km` : ''}</div>
+      ${l.alertas?.length ? `<div class="aviso-p">⚠ ${l.alertas.length} alerta${l.alertas.length > 1 ? 's' : ''}</div>` : ''}
     </div>
   </article>`;
 }
@@ -206,7 +363,7 @@ function cartao(l) {
 function desenhar() {
   const total = { todos: 0, novos: 0, salvos: 0, descartados: 0 };
   for (const l of dados.leads) {
-    if (estado.modelo && l.modelo !== estado.modelo) continue;
+    if (!passa(l)) continue;
     const m = marcas[l.id];
     if (m !== 'descartado') total.todos++;
     if (ehNovo(l) && m !== 'descartado') total.novos++;
@@ -214,33 +371,125 @@ function desenhar() {
     if (m === 'descartado') total.descartados++;
   }
   const nomes = { todos: 'Todos', novos: 'Novos', salvos: 'Salvos', descartados: 'Descartados' };
-  document.getElementById('abas').innerHTML = Object.keys(nomes).map(k =>
+  $('abas').innerHTML = Object.keys(nomes).map(k =>
     `<button class="aba" data-aba="${k}" aria-pressed="${estado.aba === k}">${nomes[k]}<span class="n">${total[k]}</span></button>`).join('');
-  const modelos = [...new Set(dados.leads.map(l => l.modelo))];
-  document.getElementById('chips').innerHTML = [`<button class="chip" data-modelo="" aria-pressed="${!estado.modelo}">Todos</button>`]
-    .concat(modelos.map(m => `<button class="chip" data-modelo="${esc(m)}" aria-pressed="${estado.modelo === m}">${esc(m)}</button>`)).join('');
+  const sel = estado.f.modelos;
+  $('chips').innerHTML = [`<button class="chip" data-modelo="" aria-pressed="${!sel.length}">Todos</button>`]
+    .concat(dados.modelos.map(m => `<button class="chip" data-modelo="${esc(m)}" aria-pressed="${sel.includes(m)}">${esc(m)}</button>`)).join('');
+  const n = qtdFiltrosAtivos();
+  $('qtdFiltros').hidden = !n;
+  $('qtdFiltros').textContent = n;
+
   const ls = filtrar();
-  const msgs = { novos: 'Nenhum carro novo desde a última visita.', salvos: 'Toque na ★ de um carro para guardar aqui.', descartados: 'Nada descartado.', todos: 'Nenhum carro dentro dos critérios agora.' };
-  document.getElementById('lista').innerHTML = (ls.length ? ls.map(cartao).join('') : `<p class="vazio">${msgs[estado.aba]}</p>`)
-    + `<p class="rodape">${dados.analisados} anúncios analisados · raio de ${dados.raio_km} km de ${esc(dados.base)}<br>* FIPE estimada pela versão mais barata quando o anúncio não informa a versão</p>`;
+  $('contagem').innerHTML = `${ls.length} carro${ls.length === 1 ? '' : 's'}${n ? ' · <button id="limparRapido">limpar filtros</button>' : ''}`;
+  const msgs = { novos: 'Nenhum carro novo desde a última visita.', salvos: 'Toque na ★ de um carro para guardar aqui.',
+    descartados: 'Nada descartado.', todos: n ? 'Nenhum carro com esses filtros.' : 'Nenhum carro dentro dos critérios agora.' };
+  $('lista').innerHTML = (ls.length ? `<div class="grade">${ls.map(card).join('')}</div>` : `<p class="vazio">${msgs[estado.aba]}</p>`)
+    + `<p class="rodape">${dados.analisados} anúncios analisados · raio de ${dados.raio_km} km de ${esc(dados.base)}</p>`;
+}
+
+/* ---------- detalhe ---------- */
+function detalhe(l) {
+  const hist = l.historico_preco || [];
+  const baixou = hist.length > 1 && hist[0].preco > l.preco ? `<span class="baixou">↓ baixou de ${fmt(hist[0].preco)}</span>` : '';
+  const alertas = (l.alertas || []).map(a => `<span class="alerta">⚠ ${esc(a)}</span>`);
+  if (l.completo) alertas.unshift('<span class="alerta ok">✓ completo</span>');
+  const fipeTxt = l.fipe ? `FIPE ${fmt(l.fipe)}${l.fipe_fonte === 'FIPE estimada' ? '*' : ''}` : 'FIPE não encontrada';
+  const margem = l.margem != null ? `<span class="margem ${l.margem < 0 ? 'neg' : ''}">${l.margem >= 0 ? '+' : '−'}${fmt(Math.abs(l.margem))} (${l.desconto_pct > 0 ? '−' : '+'}${Math.abs(l.desconto_pct).toFixed(0)}%)</span>` : '';
+  const ficha = [
+    ['Versão', l.versao], ['Ano', l.ano], ['Km', l.km?.toLocaleString('pt-BR')], ['Câmbio', l.cambio], ['Carroceria', l.carroceria],
+    ['Direção', l.direcao], ['Cor', l.cor], ['Combustível', l.combustivel], ['IPVA pago', l.ipva_pago], ['Quitado', l.quitado],
+    ['Único dono', l.unico_dono], ['Aceita troca', l.aceita_troca], ['Vendedor', l.vendedor && `${l.vendedor}${l.loja ? ' (loja)' : ''}`],
+    ['Publicado', l.publicado_em && new Date(l.publicado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })],
+    ['FIPE', l.fipe && `${fmt(l.fipe)} (${l.fipe_fonte === 'FIPE estimada' ? 'estimada pela versão mais barata' : l.fipe_fonte})`],
+  ].filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+  const m = marcas[l.id];
+  return `<div class="jan-topo"><h2>${esc(nomeCurto(l))} · ${l.ano ?? ''}</h2><button class="fechar" data-fechar aria-label="Fechar">✕</button></div>
+    <div class="fotos">${(l.fotos || []).map(f => `<img src="${esc(f)}" alt="" loading="lazy" referrerpolicy="no-referrer">`).join('')}</div>
+    ${l.fotos?.length > 1 ? `<div class="fotos-n">${l.fotos.length} fotos · arraste para o lado ›</div>` : ''}
+    <div class="jan-corpo" data-id="${esc(l.id)}">
+      <h3 class="titulo">${esc(l.titulo)}</h3>
+      <div class="precos"><span class="preco">${fmt(l.preco)}</span><span class="fipe">${fipeTxt}</span>${margem}</div>
+      ${baixou}
+      <div class="meta"><span>${l.km != null ? l.km.toLocaleString('pt-BR') + ' km' : 'km ?'}</span><span>📍 ${esc(l.cidade || '?')}${l.distancia_km != null ? ` · ${l.distancia_km} km` : ''}</span><span>${l.loja ? 'Loja' : 'Particular'}</span><span>${l.publicado_em ? haQuanto(l.publicado_em) : ''}</span></div>
+      ${alertas.length ? `<div class="alertas">${alertas.join('')}</div>` : ''}
+      <div class="acoes">
+        <a class="btn principal" href="${esc(l.url)}" target="_blank" rel="noopener">Ver na OLX</a>
+        <button class="btn sec" data-acao="salvo" aria-pressed="${m === 'salvo'}" aria-label="Salvar">★</button>
+        <button class="btn sec desc" data-acao="descartado" aria-pressed="${m === 'descartado'}" aria-label="Descartar">✕</button>
+      </div>
+      <div class="secao">Ficha</div><dl class="ficha">${ficha}</dl>
+      ${l.opcionais?.length ? `<div class="secao">Opcionais</div><p style="font-size:14px;margin:0">${esc(l.opcionais.join(', '))}</p>` : ''}
+      ${l.descricao ? `<div class="secao">Descrição do vendedor</div><div class="descricao">${esc(l.descricao)}</div>` : ''}
+    </div>`;
+}
+
+let abertoId = null;
+function abrirDetalhe(id) {
+  const l = dados.leads.find(x => x.id === id);
+  if (!l) return;
+  abertoId = id;
+  $('detalhe').innerHTML = detalhe(l);
+  abrirJanela($('detalhe'));
+  $('detalhe').scrollTop = 0;
+}
+
+// janelas abertas entram no histórico, para o botão/gesto "voltar" do celular fechar a janela
+function abrirJanela(d) {
+  if (d.open) return;
+  d.showModal();
+  history.pushState({ janela: d.id }, '');
+}
+function fecharJanela(d) {
+  if (!d.open) return;
+  d.close();
+  if (history.state?.janela === d.id) history.back();
+}
+addEventListener('popstate', () => document.querySelectorAll('dialog[open]').forEach(d => d.close()));
+for (const d of document.querySelectorAll('dialog')) {
+  d.addEventListener('click', e => {
+    if (e.target === d || e.target.closest('[data-fechar]')) fecharJanela(d);
+  });
+  d.addEventListener('cancel', e => { e.preventDefault(); fecharJanela(d); });
+}
+
+function marcar(id, acao) {
+  marcas[id] = marcas[id] === acao ? undefined : acao;
+  if (!marcas[id]) delete marcas[id];
+  guardar('marcas', marcas);
+  desenhar();
+  if ($('detalhe').open && abertoId === id) {
+    const y = $('detalhe').scrollTop;
+    $('detalhe').innerHTML = detalhe(dados.leads.find(x => x.id === id));
+    $('detalhe').scrollTop = y;
+  }
 }
 
 document.addEventListener('click', e => {
-  const aba = e.target.closest('[data-aba]');
-  if (aba) { estado.aba = aba.dataset.aba; desenhar(); scrollTo(0, 0); return; }
-  const chip = e.target.closest('[data-modelo]');
-  if (chip) { estado.modelo = chip.dataset.modelo || null; desenhar(); return; }
   const acao = e.target.closest('[data-acao]');
   if (acao) {
-    const id = acao.closest('.lead').dataset.id;
-    marcas[id] = marcas[id] === acao.dataset.acao ? undefined : acao.dataset.acao;
-    if (!marcas[id]) delete marcas[id];
-    guardar('marcas', marcas);
-    desenhar();
+    e.stopPropagation();
+    const id = acao.closest('[data-id]').dataset.id;
+    return marcar(id, acao.dataset.acao);
   }
+  if (e.target.closest('#limparRapido')) { estado.f = { ...FILTROS_VAZIOS }; return salvarFiltros(); }
+  const aba = e.target.closest('[data-aba]');
+  if (aba) { estado.aba = aba.dataset.aba; desenhar(); scrollTo(0, 0); return; }
+  const chip = e.target.closest('#chips [data-modelo]');
+  if (chip) {
+    const m = chip.dataset.modelo;
+    estado.f.modelos = !m ? [] : estado.f.modelos.includes(m) ? estado.f.modelos.filter(x => x !== m) : [...estado.f.modelos, m];
+    return salvarFiltros();
+  }
+  const c = e.target.closest('.card');
+  if (c) abrirDetalhe(c.dataset.id);
 });
-document.getElementById('ordem').addEventListener('change', e => { estado.ordem = e.target.value; guardar('ordem', estado.ordem); desenhar(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.classList?.contains('card')) abrirDetalhe(e.target.dataset.id);
+});
+$('ordem').addEventListener('change', e => { estado.ordem = e.target.value; guardar('ordem', estado.ordem); desenhar(); });
 
+/* ---------- senha e carga ---------- */
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
 async function abrir(pacote, senha) {
@@ -254,15 +503,15 @@ async function abrir(pacote, senha) {
 
 function pedirSenha(msg) {
   document.querySelector('.topo').hidden = true;
-  document.getElementById('lista').hidden = true;
-  document.getElementById('cadeado').hidden = false;
-  document.getElementById('erro').textContent = msg || '';
-  document.getElementById('senha').focus();
+  $('lista').hidden = true;
+  $('cadeado').hidden = false;
+  $('erro').textContent = msg || '';
+  $('senha').focus();
 }
 
-document.getElementById('cadeado').addEventListener('submit', e => {
+$('cadeado').addEventListener('submit', e => {
   e.preventDefault();
-  guardar('senha', document.getElementById('senha').value.trim());
+  guardar('senha', $('senha').value.trim());
   carregar();
 });
 
@@ -272,7 +521,7 @@ async function carregar() {
     const r = await fetch('leads.enc.json?t=' + Date.now(), { cache: 'no-store' });
     pacote = await r.json();
   } catch {
-    document.getElementById('status').textContent = 'Sem conexão. Tente de novo em instantes.';
+    $('status').textContent = 'Sem conexão. Tente de novo em instantes.';
     return;
   }
   const senha = guardado('senha', null);
@@ -284,11 +533,11 @@ async function carregar() {
     return pedirSenha('Senha errada. Tente de novo.');
   }
   document.querySelector('.topo').hidden = false;
-  document.getElementById('lista').hidden = false;
-  document.getElementById('cadeado').hidden = true;
+  $('lista').hidden = false;
+  $('cadeado').hidden = true;
+  estado.f.modelos = estado.f.modelos.filter(m => dados.modelos.includes(m));
   const novos = dados.leads.filter(ehNovo).length;
-  document.getElementById('status').textContent =
-    `Atualizado ${haQuanto(dados.atualizado_em)} · ${dados.leads.length} carros${novos ? ` · ${novos} novos` : ''}`;
+  $('status').textContent = `Atualizado ${haQuanto(dados.atualizado_em)} · ${dados.leads.length} carros${novos ? ` · ${novos} novos` : ''}`;
   if (novos && estado.aba === 'todos' && !sessionStorage.getItem('abriuNovos')) {
     estado.aba = 'novos';
     try { sessionStorage.setItem('abriuNovos', '1'); } catch {}
@@ -298,7 +547,7 @@ async function carregar() {
 }
 
 carregar();
-document.addEventListener('visibilitychange', () => { if (!document.hidden) carregar(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !document.querySelector('dialog[open]')) carregar(); });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
