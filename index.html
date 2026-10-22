@@ -72,7 +72,7 @@ main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 1
 .thumb { position: relative; aspect-ratio: 4/3; background: var(--chip); overflow: hidden; }
 .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .selo { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 6px; font-weight: 800; font-size: 13px; color: #fff; background: #0f7a45; }
-.selo.medio { background: #2f7d4f; } .selo.fraco { background: #5b6a60; }
+.selo.medio { background: #2f7d4f; } .selo.fraco { background: #5b6a60; } .selo.acima { background: #9a6700; }
 .fonte { position: absolute; bottom: 6px; right: 6px; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; color: #fff; background: rgba(0,0,0,.55); }
 .fonte.fb { background: #1877f2; }
 .novo { position: absolute; bottom: 6px; left: 6px; background: #fff; color: #111; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; letter-spacing: .04em; }
@@ -265,7 +265,7 @@ function desenharFiltros() {
     <div class="grupo"><span class="rotulo">Onde está anunciado</span><div class="opcoes">
       ${[['olx', 'OLX'], ['facebook', 'Facebook Marketplace']].map(([v, r]) => opcao('fonte', v, r, f.fonte.includes(v))).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Abaixo da FIPE</span><div class="opcoes">
-      ${[[null, 'Qualquer'], [5, '5% ou mais'], [10, '10% ou mais'], [15, '15% ou mais'], [20, '20% ou mais']]
+      ${[[null, 'Qualquer'], [0, 'Só abaixo'], [5, '5% ou mais'], [10, '10% ou mais'], [15, '15% ou mais'], [20, '20% ou mais']]
         .map(([v, r]) => opcao('descMin', v ?? '', r, f.descMin === v)).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Preço</span><div class="faixa">
       <input type="number" inputmode="numeric" step="1000" placeholder="mín. 30.000" data-campo="precoMin" value="${f.precoMin ?? ''}">
@@ -335,13 +335,15 @@ function filtrar() {
 function selo(l) {
   const d = l.desconto_pct;
   if (d == null) return '';
+  if (d <= -1) return `<span class="selo acima">+${Math.abs(d).toFixed(0)}% FIPE</span>`;
   return `<span class="selo ${d >= 10 ? '' : d >= 5 ? 'medio' : 'fraco'}">${d < 1 ? 'na FIPE' : `−${d.toFixed(0)}%`}</span>`;
 }
 
 function card(l) {
   const m = l.margem;
   const margem = m == null ? '<span class="margem-p sem">FIPE não encontrada</span>'
-    : `<span class="margem-p ${m < 0 ? 'neg' : ''}">${m >= 0 ? '+' : '−'}${fmt(Math.abs(m))} da FIPE</span>`;
+    : m < 0 ? `<span class="margem-p neg">${fmt(-m)} acima da FIPE</span>`
+    : `<span class="margem-p">+${fmt(m)} da FIPE</span>`;
   return `<article class="card ${marcas[l.id] === 'descartado' ? 'descartado' : ''}" data-id="${esc(l.id)}" tabindex="0">
     <div class="thumb">
       ${l.fotos?.[0] ? `<img src="${esc(l.fotos[0])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
