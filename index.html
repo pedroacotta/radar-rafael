@@ -51,13 +51,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .aba[aria-pressed="true"] { background: var(--marca); color: var(--bg); }
 .aba .n { opacity: .7; font-weight: 500; margin-left: 4px; }
 .barra { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
-.btn-filtro { flex: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--linha); background: var(--card); padding: 7px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; }
+.btn-filtro { flex: none; width: 88px; justify-content: center; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--linha); background: var(--card); padding: 7px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; }
 .btn-filtro .qtd { background: var(--marca); color: var(--bg); border-radius: 999px; font-size: 12px; min-width: 20px; height: 20px; display: inline-grid; place-items: center; padding: 0 6px; }
 .chips { display: flex; gap: 6px; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none; }
 .chip { flex: none; border: 1px solid var(--linha); background: var(--card); padding: 6px 11px; border-radius: 999px; font-size: 13px; }
 .chip[aria-pressed="true"] { border-color: var(--marca); color: var(--marca); font-weight: 700; background: var(--verde-bg); }
 select { font: inherit; font-size: 14px; padding: 7px 8px; border-radius: 10px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); }
-.resumo { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; color: var(--suave); }
+.rot-ordem { flex: none; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--suave); width: 88px; text-align: center; }
+.ord { flex: none; border: 0; background: var(--chip); padding: 6px 11px; border-radius: 999px; font-size: 13px; }
+.ord[aria-pressed="true"] { background: var(--texto); color: var(--bg); font-weight: 700; }
+.resumo { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 13px; color: var(--suave); }
 .resumo button { border: 0; background: none; color: var(--marca); font-weight: 700; font-size: 13px; padding: 0; }
 
 /* ---------- grade ---------- */
@@ -146,19 +149,7 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
       <button class="btn-filtro" id="abrirFiltros">⚙︎ Filtros<span class="qtd" id="qtdFiltros" hidden></span></button>
       <div class="chips" id="chips"></div>
     </div>
-    <div class="resumo">
-      <span id="contagem"></span>
-      <select id="ordem" aria-label="Ordenar">
-        <option value="nota">Melhor negócio</option>
-        <option value="desconto">Maior desconto</option>
-        <option value="margem">Maior margem (R$)</option>
-        <option value="recente">Mais novos</option>
-        <option value="perto">Mais perto</option>
-        <option value="preco">Menor preço</option>
-        <option value="km">Menos km</option>
-        <option value="ano">Mais novo (ano)</option>
-      </select>
-    </div>
+    <div class="barra"><span class="rot-ordem">Ordenar</span><div class="chips" id="ordem"></div></div>
   </div>
 </header>
 <main id="lista"></main>
@@ -199,8 +190,10 @@ const FILTROS_VAZIOS = {
 let dados = null;
 let marcas = guardado('marcas', {});            // id -> 'salvo' | 'descartado'
 const ultimaVisita = guardado('ultimaVisita', null);
+const ORDENS = { nota: 'Melhor negócio', desconto: 'Maior desconto', margem: 'Maior margem', recente: 'Mais recentes',
+  perto: 'Mais perto', preco: 'Menor preço', km: 'Menos km', ano: 'Ano mais novo' };
 const estado = { aba: 'todos', ordem: guardado('ordem', 'nota'), f: { ...FILTROS_VAZIOS, ...guardado('filtros', {}) } };
-$('ordem').value = estado.ordem;
+if (!ORDENS[estado.ordem]) estado.ordem = 'nota';
 
 function haQuanto(iso) {
   const min = Math.round((Date.now() - new Date(iso)) / 60000);
@@ -376,15 +369,17 @@ function desenhar() {
   const sel = estado.f.modelos;
   $('chips').innerHTML = [`<button class="chip" data-modelo="" aria-pressed="${!sel.length}">Todos</button>`]
     .concat(dados.modelos.map(m => `<button class="chip" data-modelo="${esc(m)}" aria-pressed="${sel.includes(m)}">${esc(m)}</button>`)).join('');
+  $('ordem').innerHTML = Object.entries(ORDENS).map(([k, r]) =>
+    `<button class="ord" data-ordem="${k}" aria-pressed="${estado.ordem === k}">${r}</button>`).join('');
   const n = qtdFiltrosAtivos();
   $('qtdFiltros').hidden = !n;
   $('qtdFiltros').textContent = n;
 
   const ls = filtrar();
-  $('contagem').innerHTML = `${ls.length} carro${ls.length === 1 ? '' : 's'}${n ? ' · <button id="limparRapido">limpar filtros</button>' : ''}`;
+  const contagem = `<div class="resumo">${ls.length} carro${ls.length === 1 ? '' : 's'} · ${ORDENS[estado.ordem].toLowerCase()}${n ? ' · <button id="limparRapido">limpar filtros</button>' : ''}</div>`;
   const msgs = { novos: 'Nenhum carro novo desde a última visita.', salvos: 'Toque na ★ de um carro para guardar aqui.',
     descartados: 'Nada descartado.', todos: n ? 'Nenhum carro com esses filtros.' : 'Nenhum carro dentro dos critérios agora.' };
-  $('lista').innerHTML = (ls.length ? `<div class="grade">${ls.map(card).join('')}</div>` : `<p class="vazio">${msgs[estado.aba]}</p>`)
+  $('lista').innerHTML = contagem + (ls.length ? `<div class="grade">${ls.map(card).join('')}</div>` : `<p class="vazio">${msgs[estado.aba]}</p>`)
     + `<p class="rodape">${dados.analisados} anúncios analisados · raio de ${dados.raio_km} km de ${esc(dados.base)}</p>`;
 }
 
@@ -487,7 +482,14 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.classList?.contains('card')) abrirDetalhe(e.target.dataset.id);
 });
-$('ordem').addEventListener('change', e => { estado.ordem = e.target.value; guardar('ordem', estado.ordem); desenhar(); });
+$('ordem').addEventListener('click', e => {
+  const b = e.target.closest('[data-ordem]');
+  if (!b) return;
+  estado.ordem = b.dataset.ordem;
+  guardar('ordem', estado.ordem);
+  desenhar();
+  scrollTo(0, 0);
+});
 
 /* ---------- senha e carga ---------- */
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
