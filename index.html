@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Radar do Rafael</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Carros abaixo da FIPE perto de Coronel Fabriciano">
+<meta name="theme-color" content="#0f5132">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Radar do Rafael">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icone-192.png">
+<link rel="apple-touch-icon" href="icone-180.png">
+<style>
+:root {
+  --bg: #f4f5f2; --card: #ffffff; --texto: #17201b; --suave: #5d6a62; --linha: #e2e6e1;
+  --verde: #0f7a45; --verde-bg: #e3f4ea; --ambar: #8a5a00; --ambar-bg: #fff2d6;
+  --vermelho: #b42318; --vermelho-bg: #fde8e6; --marca: #0f5132; --chip: #eceee9;
+  --sombra: 0 1px 2px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101411; --card: #1a201c; --texto: #e8ece9; --suave: #9aa59e; --linha: #2a322d;
+    --verde: #4fd18b; --verde-bg: #163524; --ambar: #f2c063; --ambar-bg: #3a2d10;
+    --vermelho: #ff8a7a; --vermelho-bg: #3d1a16; --marca: #4fd18b; --chip: #252c27;
+    --sombra: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101411; --card: #1a201c; --texto: #e8ece9; --suave: #9aa59e; --linha: #2a322d;
+  --verde: #4fd18b; --verde-bg: #163524; --ambar: #f2c063; --ambar-bg: #3a2d10;
+  --vermelho: #ff8a7a; --vermelho-bg: #3d1a16; --marca: #4fd18b; --chip: #252c27; --sombra: none;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--texto); }
+body { font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+.topo { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: calc(env(safe-area-inset-top) + 12px) 16px 8px; border-bottom: 1px solid var(--linha); }
+.topo h1 { margin: 0; font-size: 22px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+.topo h1 .ponto { width: 10px; height: 10px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 4px var(--verde-bg); }
+.status { color: var(--suave); font-size: 13px; margin-top: 2px; }
+.abas { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+.abas::-webkit-scrollbar, .chips::-webkit-scrollbar { display: none; }
+.aba { flex: none; border: 0; background: var(--chip); color: var(--texto); padding: 8px 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; }
+.aba[aria-pressed="true"] { background: var(--marca); color: var(--bg); }
+.aba .n { opacity: .7; font-weight: 500; margin-left: 4px; }
+.filtros { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+.chips { display: flex; gap: 6px; overflow-x: auto; flex: 1; scrollbar-width: none; }
+.chip { flex: none; border: 1px solid var(--linha); background: var(--card); color: var(--texto); padding: 6px 11px; border-radius: 999px; font: inherit; font-size: 13px; }
+.chip[aria-pressed="true"] { border-color: var(--marca); color: var(--marca); font-weight: 600; }
+select { font: inherit; font-size: 13px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); }
+main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 720px; margin: 0 auto; }
+.vazio { text-align: center; color: var(--suave); padding: 48px 16px; }
+.lead { background: var(--card); border-radius: 14px; box-shadow: var(--sombra); margin-bottom: 14px; overflow: hidden; border: 1px solid var(--linha); }
+.foto { position: relative; aspect-ratio: 16/10; background: var(--chip); display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.foto::-webkit-scrollbar { display: none; }
+.foto img { flex: none; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
+.selo { position: absolute; top: 10px; left: 10px; padding: 5px 10px; border-radius: 8px; font-weight: 800; font-size: 15px; background: #0f7a45; color: #fff; }
+.selo.medio { background: #2f7d4f; } .selo.fraco { background: #5b6a60; }
+.novo { position: absolute; top: 10px; right: 10px; background: #fff; color: #111; font-size: 12px; font-weight: 800; padding: 4px 8px; border-radius: 6px; letter-spacing: .04em; }
+.contagem-fotos { position: absolute; bottom: 8px; right: 10px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; padding: 2px 7px; border-radius: 6px; }
+.corpo { padding: 12px 14px 14px; }
+.titulo { font-weight: 700; font-size: 16px; margin: 0 0 6px; }
+.precos { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.preco { font-size: 24px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.fipe { color: var(--suave); font-size: 14px; font-variant-numeric: tabular-nums; }
+.margem { color: var(--verde); font-weight: 700; font-size: 14px; }
+.margem.neg { color: var(--vermelho); }
+.baixou { display: inline-block; margin-top: 4px; font-size: 13px; color: var(--verde); font-weight: 600; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--suave); font-size: 14px; margin-top: 8px; }
+.alertas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.alerta { background: var(--ambar-bg); color: var(--ambar); font-size: 12.5px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+.alerta.ok { background: var(--verde-bg); color: var(--verde); }
+.acoes { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 12px; }
+.btn { border: 0; border-radius: 10px; padding: 11px 12px; font: inherit; font-size: 15px; font-weight: 700; text-align: center; text-decoration: none; cursor: pointer; }
+.btn.principal { background: var(--marca); color: var(--bg); }
+.btn.sec { background: var(--chip); color: var(--texto); min-width: 48px; }
+.btn.sec[aria-pressed="true"] { background: var(--verde-bg); color: var(--verde); }
+.btn.desc[aria-pressed="true"] { background: var(--vermelho-bg); color: var(--vermelho); }
+details { margin-top: 10px; border-top: 1px solid var(--linha); padding-top: 8px; }
+summary { cursor: pointer; color: var(--suave); font-size: 14px; font-weight: 600; }
+.ficha { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; margin: 10px 0; }
+.ficha dt { color: var(--suave); } .ficha dd { margin: 0; }
+.descricao { white-space: pre-wrap; font-size: 14px; color: var(--texto); background: var(--bg); padding: 10px; border-radius: 8px; max-height: 260px; overflow: auto; }
+.rodape { text-align: center; color: var(--suave); font-size: 12px; margin-top: 24px; }
+.cadeado { max-width: 340px; margin: 18vh auto 0; padding: 0 16px; text-align: center; }
+.cadeado h2 { margin: 0 0 6px; font-size: 20px; }
+.cadeado p { color: var(--suave); margin: 0 0 18px; font-size: 15px; }
+.cadeado input { width: 100%; font: inherit; font-size: 18px; padding: 13px 14px; border-radius: 10px; border: 1px solid var(--linha); background: var(--card); color: var(--texto); text-align: center; }
+.cadeado .btn { width: 100%; margin-top: 10px; }
+.cadeado .erro { color: var(--vermelho); font-size: 14px; min-height: 20px; margin-top: 8px; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="topo">
+  <h1><span class="ponto"></span>Radar do Rafael</h1>
+  <div class="status" id="status">Carregando…</div>
+  <nav class="abas" id="abas"></nav>
+  <div class="filtros">
+    <div class="chips" id="chips"></div>
+    <select id="ordem" aria-label="Ordenar">
+      <option value="nota">Melhor negócio</option>
+      <option value="desconto">Maior desconto</option>
+      <option value="recente">Mais novos</option>
+      <option value="perto">Mais perto</option>
+      <option value="preco">Menor preço</option>
+    </select>
+  </div>
+</header>
+<main id="lista"></main>
+<form class="cadeado" id="cadeado" hidden>
+  <h2>🔒 Digite a senha</h2>
+  <p>Só precisa fazer isso uma vez neste celular.</p>
+  <input id="senha" type="password" autocomplete="current-password" autocapitalize="none" placeholder="senha">
+  <button class="btn principal" type="submit">Entrar</button>
+  <div class="erro" id="erro"></div>
+</form>
+
+<script>
+const fmt = n => n == null ? '—' : 'R$ ' + n.toLocaleString('pt-BR');
+const km = n => n == null ? 'km ?' : n.toLocaleString('pt-BR') + ' km';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+const guardado = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) ?? padrao; } catch { return padrao; } };
+const guardar = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch {} };
+
+let dados = null;
+let marcas = guardado('marcas', {});            // id -> 'salvo' | 'descartado'
+const ultimaVisita = guardado('ultimaVisita', null);
+const estado = { aba: 'todos', modelo: null, ordem: guardado('ordem', 'nota') };
+document.getElementById('ordem').value = estado.ordem;
+
+function haQuanto(iso) {
+  const min = Math.round((Date.now() - new Date(iso)) / 60000);
+  if (min < 1) return 'agora';
+  if (min < 60) return `há ${min} min`;
+  const h = Math.round(min / 60);
+  if (h < 24) return `há ${h} h`;
+  const d = Math.round(h / 24);
+  return d === 1 ? 'ontem' : `há ${d} dias`;
+}
+
+const ehNovo = l => ultimaVisita && l.primeiro_visto > ultimaVisita;
+
+function filtrar() {
+  let ls = dados.leads.filter(l => !estado.modelo || l.modelo === estado.modelo);
+  const porAba = {
+    todos: l => marcas[l.id] !== 'descartado',
+    novos: l => ehNovo(l) && marcas[l.id] !== 'descartado',
+    salvos: l => marcas[l.id] === 'salvo',
+    descartados: l => marcas[l.id] === 'descartado',
+  };
+  ls = ls.filter(porAba[estado.aba]);
+  const ord = {
+    nota: (a, b) => b.nota - a.nota,
+    desconto: (a, b) => (b.desconto_pct ?? -99) - (a.desconto_pct ?? -99),
+    recente: (a, b) => (b.publicado_em || '').localeCompare(a.publicado_em || ''),
+    perto: (a, b) => (a.distancia_km ?? 999) - (b.distancia_km ?? 999),
+    preco: (a, b) => a.preco - b.preco,
+  };
+  return ls.sort(ord[estado.ordem]);
+}
+
+function cartao(l) {
+  const d = l.desconto_pct;
+  const selo = d == null ? '' : `<span class="selo ${d >= 10 ? '' : d >= 5 ? 'medio' : 'fraco'}">${d > 0 ? '−' : '+'}${Math.abs(d).toFixed(0)}% FIPE</span>`;
+  const fotos = (l.fotos || []).map((f, i) => `<img src="${esc(f)}" alt="" loading="lazy" referrerpolicy="no-referrer" ${i ? '' : 'fetchpriority="high"'}>`).join('');
+  const hist = l.historico_preco || [];
+  const baixou = hist.length > 1 && hist[0].preco > l.preco ? `<span class="baixou">↓ baixou de ${fmt(hist[0].preco)}</span>` : '';
+  const alertas = (l.alertas || []).map(a => `<span class="alerta">⚠ ${esc(a)}</span>`);
+  if (l.completo) alertas.unshift('<span class="alerta ok">✓ completo</span>');
+  const fipeTxt = l.fipe ? `FIPE ${fmt(l.fipe)}${l.fipe_fonte === 'FIPE estimada' ? '*' : ''}` : 'FIPE ?';
+  const margem = l.margem != null ? `<span class="margem ${l.margem < 0 ? 'neg' : ''}">${l.margem >= 0 ? '+' : '−'}${fmt(Math.abs(l.margem))} margem</span>` : '';
+  const ficha = [
+    ['Versão', l.versao], ['Ano', l.ano], ['Câmbio', l.cambio], ['Direção', l.direcao], ['Cor', l.cor],
+    ['Combustível', l.combustivel], ['IPVA pago', l.ipva_pago], ['Quitado', l.quitado], ['Único dono', l.unico_dono],
+    ['Aceita troca', l.aceita_troca], ['Vendedor', l.vendedor && `${l.vendedor}${l.loja ? ' (loja)' : ''}`],
+    ['Publicado', l.publicado_em && new Date(l.publicado_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })],
+    ['FIPE', l.fipe && `${fmt(l.fipe)} (${l.fipe_fonte})`],
+  ].filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+  const m = marcas[l.id];
+  return `<article class="lead" data-id="${esc(l.id)}">
+    <div class="foto">${fotos}${selo}${ehNovo(l) ? '<span class="novo">NOVO</span>' : ''}${l.fotos?.length > 1 ? `<span class="contagem-fotos">${l.fotos.length} fotos ›</span>` : ''}</div>
+    <div class="corpo">
+      <h2 class="titulo">${esc(l.titulo)}</h2>
+      <div class="precos"><span class="preco">${fmt(l.preco)}</span><span class="fipe">${fipeTxt}</span>${margem}</div>
+      ${baixou}
+      <div class="meta"><span>${km(l.km)}</span><span>📍 ${esc(l.cidade || '?')}${l.distancia_km != null ? ` · ${l.distancia_km} km` : ''}</span><span>${l.loja ? 'Loja' : 'Particular'}</span><span>${l.publicado_em ? haQuanto(l.publicado_em) : ''}</span></div>
+      ${alertas.length ? `<div class="alertas">${alertas.join('')}</div>` : ''}
+      <div class="acoes">
+        <a class="btn principal" href="${esc(l.url)}" target="_blank" rel="noopener">Ver na OLX</a>
+        <button class="btn sec" data-acao="salvo" aria-pressed="${m === 'salvo'}" aria-label="Salvar">★</button>
+        <button class="btn sec desc" data-acao="descartado" aria-pressed="${m === 'descartado'}" aria-label="Descartar">✕</button>
+      </div>
+      <details><summary>Ficha, opcionais e descrição</summary>
+        <dl class="ficha">${ficha}</dl>
+        ${l.opcionais?.length ? `<p style="font-size:14px;margin:0 0 10px"><b>Opcionais:</b> ${esc(l.opcionais.join(', '))}</p>` : ''}
+        ${l.descricao ? `<div class="descricao">${esc(l.descricao)}</div>` : ''}
+      </details>
+    </div>
+  </article>`;
+}
+
+function desenhar() {
+  const total = { todos: 0, novos: 0, salvos: 0, descartados: 0 };
+  for (const l of dados.leads) {
+    if (estado.modelo && l.modelo !== estado.modelo) continue;
+    const m = marcas[l.id];
+    if (m !== 'descartado') total.todos++;
+    if (ehNovo(l) && m !== 'descartado') total.novos++;
+    if (m === 'salvo') total.salvos++;
+    if (m === 'descartado') total.descartados++;
+  }
+  const nomes = { todos: 'Todos', novos: 'Novos', salvos: 'Salvos', descartados: 'Descartados' };
+  document.getElementById('abas').innerHTML = Object.keys(nomes).map(k =>
+    `<button class="aba" data-aba="${k}" aria-pressed="${estado.aba === k}">${nomes[k]}<span class="n">${total[k]}</span></button>`).join('');
+  const modelos = [...new Set(dados.leads.map(l => l.modelo))];
+  document.getElementById('chips').innerHTML = [`<button class="chip" data-modelo="" aria-pressed="${!estado.modelo}">Todos</button>`]
+    .concat(modelos.map(m => `<button class="chip" data-modelo="${esc(m)}" aria-pressed="${estado.modelo === m}">${esc(m)}</button>`)).join('');
+  const ls = filtrar();
+  const msgs = { novos: 'Nenhum carro novo desde a última visita.', salvos: 'Toque na ★ de um carro para guardar aqui.', descartados: 'Nada descartado.', todos: 'Nenhum carro dentro dos critérios agora.' };
+  document.getElementById('lista').innerHTML = (ls.length ? ls.map(cartao).join('') : `<p class="vazio">${msgs[estado.aba]}</p>`)
+    + `<p class="rodape">${dados.analisados} anúncios analisados · raio de ${dados.raio_km} km de ${esc(dados.base)}<br>* FIPE estimada pela versão mais barata quando o anúncio não informa a versão</p>`;
+}
+
+document.addEventListener('click', e => {
+  const aba = e.target.closest('[data-aba]');
+  if (aba) { estado.aba = aba.dataset.aba; desenhar(); scrollTo(0, 0); return; }
+  const chip = e.target.closest('[data-modelo]');
+  if (chip) { estado.modelo = chip.dataset.modelo || null; desenhar(); return; }
+  const acao = e.target.closest('[data-acao]');
+  if (acao) {
+    const id = acao.closest('.lead').dataset.id;
+    marcas[id] = marcas[id] === acao.dataset.acao ? undefined : acao.dataset.acao;
+    if (!marcas[id]) delete marcas[id];
+    guardar('marcas', marcas);
+    desenhar();
+  }
+});
+document.getElementById('ordem').addEventListener('change', e => { estado.ordem = e.target.value; guardar('ordem', estado.ordem); desenhar(); });
+
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+async function abrir(pacote, senha) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(senha), 'PBKDF2', false, ['deriveKey']);
+  const chave = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', hash: 'SHA-256', salt: b64(pacote.sal), iterations: pacote.iteracoes },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(pacote.iv) }, chave, b64(pacote.dados));
+  return JSON.parse(new TextDecoder().decode(claro));
+}
+
+function pedirSenha(msg) {
+  document.querySelector('.topo').hidden = true;
+  document.getElementById('lista').hidden = true;
+  document.getElementById('cadeado').hidden = false;
+  document.getElementById('erro').textContent = msg || '';
+  document.getElementById('senha').focus();
+}
+
+document.getElementById('cadeado').addEventListener('submit', e => {
+  e.preventDefault();
+  guardar('senha', document.getElementById('senha').value.trim());
+  carregar();
+});
+
+async function carregar() {
+  let pacote;
+  try {
+    const r = await fetch('leads.enc.json?t=' + Date.now(), { cache: 'no-store' });
+    pacote = await r.json();
+  } catch {
+    document.getElementById('status').textContent = 'Sem conexão. Tente de novo em instantes.';
+    return;
+  }
+  const senha = guardado('senha', null);
+  if (!senha) return pedirSenha();
+  try {
+    dados = await abrir(pacote, senha);
+  } catch {
+    guardar('senha', null);
+    return pedirSenha('Senha errada. Tente de novo.');
+  }
+  document.querySelector('.topo').hidden = false;
+  document.getElementById('lista').hidden = false;
+  document.getElementById('cadeado').hidden = true;
+  const novos = dados.leads.filter(ehNovo).length;
+  document.getElementById('status').textContent =
+    `Atualizado ${haQuanto(dados.atualizado_em)} · ${dados.leads.length} carros${novos ? ` · ${novos} novos` : ''}`;
+  if (novos && estado.aba === 'todos' && !sessionStorage.getItem('abriuNovos')) {
+    estado.aba = 'novos';
+    try { sessionStorage.setItem('abriuNovos', '1'); } catch {}
+  }
+  desenhar();
+  guardar('ultimaVisita', dados.atualizado_em);
+}
+
+carregar();
+document.addEventListener('visibilitychange', () => { if (!document.hidden) carregar(); });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
