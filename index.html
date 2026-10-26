@@ -186,7 +186,7 @@ const guardar = (chave, valor) => { try { localStorage.setItem(chave, JSON.strin
 
 const FILTROS_VAZIOS = {
   modelos: [], precoMin: null, precoMax: null, anoMin: null, anoMax: null, kmMax: null, distMax: null,
-  descMin: null, cambio: [], carroceria: [], fonte: [], vendedor: null, completo: false, semAlerta: false, comFipe: false,
+  descMin: null, cambio: [], carroceria: [], fonte: [], completo: false, semAlerta: false, comFipe: false,
 };
 
 let dados = null;
@@ -196,6 +196,7 @@ const ORDENS = { nota: 'Melhor negócio', desconto: 'Maior desconto', margem: 'M
   perto: 'Mais perto', preco: 'Menor preço', km: 'Menos km', ano: 'Ano mais novo' };
 const estado = { aba: 'todos', ordem: guardado('ordem', 'nota'), f: { ...FILTROS_VAZIOS, ...guardado('filtros', {}) } };
 if (!ORDENS[estado.ordem]) estado.ordem = 'nota';
+if (estado.f.descMin === 0) estado.f.descMin = null;   // opção "Só abaixo" saiu: agora todos estão abaixo da FIPE
 
 function haQuanto(iso) {
   const min = Math.round((Date.now() - new Date(iso)) / 60000);
@@ -232,8 +233,6 @@ function passa(l) {
   if (f.cambio.length && !f.cambio.includes(ehAuto(l) ? 'Automático' : 'Manual')) return false;
   if (f.carroceria.length && !f.carroceria.includes(l.carroceria)) return false;
   if (f.fonte.length && !f.fonte.includes(l.fonte || 'olx')) return false;
-  if (f.vendedor === 'loja' && !l.loja) return false;
-  if (f.vendedor === 'particular' && l.loja) return false;
   if (f.completo && !l.completo) return false;
   if (f.semAlerta && l.alertas?.length) return false;
   if (f.comFipe && !l.fipe) return false;
@@ -243,7 +242,7 @@ function passa(l) {
 function qtdFiltrosAtivos() {
   const f = estado.f;
   return [f.modelos.length, f.precoMin || f.precoMax, f.anoMin || f.anoMax, f.kmMax, f.distMax, f.descMin != null,
-    f.cambio.length, f.carroceria.length, f.fonte.length, f.vendedor, f.completo, f.semAlerta, f.comFipe].filter(Boolean).length;
+    f.cambio.length, f.carroceria.length, f.fonte.length, f.completo, f.semAlerta, f.comFipe].filter(Boolean).length;
 }
 
 const salvarFiltros = () => { guardar('filtros', estado.f); desenhar(); desenharFiltros(); };
@@ -265,7 +264,7 @@ function desenharFiltros() {
     <div class="grupo"><span class="rotulo">Onde está anunciado</span><div class="opcoes">
       ${[['olx', 'OLX'], ['facebook', 'Facebook Marketplace']].map(([v, r]) => opcao('fonte', v, r, f.fonte.includes(v))).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Abaixo da FIPE</span><div class="opcoes">
-      ${[[null, 'Qualquer'], [0, 'Só abaixo'], [5, '5% ou mais'], [10, '10% ou mais'], [15, '15% ou mais'], [20, '20% ou mais']]
+      ${[[null, 'Qualquer'], [5, '5% ou mais'], [10, '10% ou mais'], [15, '15% ou mais'], [20, '20% ou mais']]
         .map(([v, r]) => opcao('descMin', v ?? '', r, f.descMin === v)).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Preço</span><div class="faixa">
       <input type="number" inputmode="numeric" step="1000" placeholder="mín. 30.000" data-campo="precoMin" value="${f.precoMin ?? ''}">
@@ -282,8 +281,6 @@ function desenharFiltros() {
       ${carrocerias.map(c => opcao('carroceria', c, c, f.carroceria.includes(c))).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Câmbio</span><div class="opcoes">
       ${['Manual', 'Automático'].map(c => opcao('cambio', c, c, f.cambio.includes(c))).join('')}</div></div>
-    <div class="grupo"><span class="rotulo">Vendedor</span><div class="opcoes">
-      ${[[null, 'Todos'], ['particular', 'Particular'], ['loja', 'Loja']].map(([v, r]) => opcao('vendedor', v ?? '', r, f.vendedor === v)).join('')}</div></div>
     <label class="liga">Só completos (ar, vidro e trava)<input type="checkbox" data-campo="completo" ${f.completo ? 'checked' : ''}></label>
     <label class="liga">Esconder carros com alerta ⚠<input type="checkbox" data-campo="semAlerta" ${f.semAlerta ? 'checked' : ''}></label>
     <label class="liga">Só com FIPE conhecida<input type="checkbox" data-campo="comFipe" ${f.comFipe ? 'checked' : ''}></label>`;
