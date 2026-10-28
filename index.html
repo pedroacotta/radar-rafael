@@ -75,6 +75,7 @@ main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 1
 .selo.medio { background: #2f7d4f; } .selo.fraco { background: #5b6a60; } .selo.acima { background: #9a6700; }
 .fonte { position: absolute; bottom: 6px; right: 6px; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; color: #fff; background: rgba(0,0,0,.55); }
 .fonte.fb { background: #1877f2; }
+.fonte.wm { background: #d0021b; }
 .novo { position: absolute; bottom: 6px; left: 6px; background: #fff; color: #111; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; letter-spacing: .04em; }
 .estrela { position: absolute; top: 4px; right: 4px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(0,0,0,.42); color: #fff; font-size: 17px; display: grid; place-items: center; }
 .estrela[aria-pressed="true"] { background: #f2b705; color: #3a2a00; }
@@ -190,6 +191,8 @@ const FILTROS_VAZIOS = {
 };
 
 let dados = null;
+const FONTES = { facebook: { nome: 'Facebook', classe: 'fb', botao: 'Ver no Facebook' },
+                 webmotors: { nome: 'Webmotors', classe: 'wm', botao: 'Ver na Webmotors' } };
 let marcas = guardado('marcas', {});            // id -> 'salvo' | 'descartado'
 const ultimaVisita = guardado('ultimaVisita', null);
 const ORDENS = { nota: 'Melhor negócio', desconto: 'Maior desconto', margem: 'Maior margem', recente: 'Mais recentes',
@@ -262,7 +265,7 @@ function desenharFiltros() {
     <div class="grupo"><span class="rotulo">Modelo</span><div class="opcoes">
       ${dados.modelos.map(m => opcao('modelos', m, m, f.modelos.includes(m))).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Onde está anunciado</span><div class="opcoes">
-      ${[['olx', 'OLX'], ['facebook', 'Facebook Marketplace']].map(([v, r]) => opcao('fonte', v, r, f.fonte.includes(v))).join('')}</div></div>
+      ${[['olx', 'OLX'], ['facebook', 'Facebook Marketplace'], ['webmotors', 'Webmotors']].map(([v, r]) => opcao('fonte', v, r, f.fonte.includes(v))).join('')}</div></div>
     <div class="grupo"><span class="rotulo">Abaixo da FIPE</span><div class="opcoes">
       ${[[null, 'Qualquer'], [5, '5% ou mais'], [10, '10% ou mais'], [15, '15% ou mais'], [20, '20% ou mais']]
         .map(([v, r]) => opcao('descMin', v ?? '', r, f.descMin === v)).join('')}</div></div>
@@ -345,7 +348,7 @@ function card(l) {
     <div class="thumb">
       ${l.fotos?.[0] ? `<img src="${esc(l.fotos[0])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
       ${selo(l)}${ehNovo(l) ? '<span class="novo">NOVO</span>' : ''}
-      <span class="fonte ${l.fonte === 'facebook' ? 'fb' : ''}">${l.fonte === 'facebook' ? 'Facebook' : 'OLX'}</span>
+      <span class="fonte ${FONTES[l.fonte]?.classe || ''}">${FONTES[l.fonte]?.nome || 'OLX'}</span>
       <button class="estrela" data-acao="salvo" aria-pressed="${marcas[l.id] === 'salvo'}" aria-label="Salvar">★</button>
     </div>
     <div class="info">
@@ -415,7 +418,7 @@ function detalhe(l) {
       <div class="meta"><span>${l.km != null ? l.km.toLocaleString('pt-BR') + ' km' : 'km ?'}</span><span>📍 ${esc(l.cidade || '?')}${l.distancia_km != null ? ` · ${l.distancia_km} km` : ''}</span><span>${l.loja ? 'Loja' : 'Particular'}</span><span>${l.publicado_em ? haQuanto(l.publicado_em) : ''}</span></div>
       ${alertas.length ? `<div class="alertas">${alertas.join('')}</div>` : ''}
       <div class="acoes">
-        <a class="btn principal" href="${esc(l.url)}" target="_blank" rel="noopener">${l.fonte === 'facebook' ? 'Ver no Facebook' : 'Ver na OLX'}</a>
+        <a class="btn principal" href="${esc(l.url)}" target="_blank" rel="noopener">${FONTES[l.fonte]?.botao || 'Ver na OLX'}</a>
         <button class="btn sec" data-acao="salvo" aria-pressed="${m === 'salvo'}" aria-label="Salvar">★</button>
         <button class="btn sec desc" data-acao="descartado" aria-pressed="${m === 'descartado'}" aria-label="Descartar">✕</button>
       </div>
@@ -454,15 +457,56 @@ for (const d of document.querySelectorAll('dialog')) {
   d.addEventListener('cancel', e => { e.preventDefault(); fecharJanela(d); });
 }
 
+function redesenharMarcas() {
+  desenhar();
+  const l = $('detalhe').open && dados.leads.find(x => x.id === abertoId);
+  if (l) {
+    const y = $('detalhe').scrollTop;
+    $('detalhe').innerHTML = detalhe(l);
+    $('detalhe').scrollTop = y;
+  }
+}
+
 function marcar(id, acao) {
   marcas[id] = marcas[id] === acao ? undefined : acao;
   if (!marcas[id]) delete marcas[id];
   guardar('marcas', marcas);
-  desenhar();
-  if ($('detalhe').open && abertoId === id) {
-    const y = $('detalhe').scrollTop;
-    $('detalhe').innerHTML = detalhe(dados.leads.find(x => x.id === id));
-    $('detalhe').scrollTop = y;
+  nuvem?.(id, marcas[id] ?? null);
+  redesenharMarcas();
+}
+
+/* ---------- salvos e descartados iguais em todos os aparelhos (Firebase) ---------- */
+// O caminho no banco é o SHA-256 da senha: sem a senha não dá para achar as marcas.
+// O localStorage continua como cópia para abrir sem internet.
+const FIREBASE = null;   // configuração do projeto Firebase; null = cada aparelho guarda só para si
+const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/10.14.1/firebase-';
+let nuvem = null;        // (id, 'salvo' | 'descartado' | null) => grava no banco
+
+async function sincronizar(senha) {
+  if (!FIREBASE || nuvem) return;
+  try {
+    const [{ initializeApp }, { getAuth, signInAnonymously }, db] = await Promise.all(
+      ['app', 'auth', 'database'].map(m => import(FIREBASE_SDK + m + '.js')));
+    const app = initializeApp(FIREBASE);
+    await signInAnonymously(getAuth(app));
+    const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('radar-rafael:' + senha));
+    const chave = [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('');
+    const ref = db.ref(db.getDatabase(app), `radar/${chave}/marcas`);
+    nuvem = (id, valor) => db.set(db.child(ref, id), valor).catch(() => {});
+    db.onValue(ref, snap => {
+      const remoto = snap.val() || {};
+      // primeira vez neste aparelho: sobe o que ele já tinha marcado e o banco ainda não tem
+      if (!guardado('marcasSubiram', false)) {
+        const faltam = Object.fromEntries(Object.entries(marcas).filter(([id]) => !(id in remoto)));
+        guardar('marcasSubiram', true);
+        if (Object.keys(faltam).length) return db.update(ref, faltam);
+      }
+      marcas = remoto;
+      guardar('marcas', marcas);
+      if (dados) redesenharMarcas();
+    });
+  } catch (e) {
+    console.warn('Sincronização indisponível:', e);
   }
 }
 
@@ -552,6 +596,7 @@ async function carregar() {
   }
   desenhar();
   guardar('ultimaVisita', dados.atualizado_em);
+  sincronizar(senha);
 }
 
 carregar();

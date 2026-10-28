@@ -1,5 +1,5 @@
 // Guarda o app para abrir rápido; a lista de carros sempre vem da rede primeiro.
-const CACHE = 'radar-v6';
+const CACHE = 'radar-v7';
 const APP = ['./', 'index.html', 'manifest.webmanifest', 'icone-192.png', 'icone-512.png'];
 
 self.addEventListener('install', e => {
