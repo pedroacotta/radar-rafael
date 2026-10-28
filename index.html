@@ -478,7 +478,13 @@ function marcar(id, acao) {
 /* ---------- salvos e descartados iguais em todos os aparelhos (Firebase) ---------- */
 // O caminho no banco é o SHA-256 da senha: sem a senha não dá para achar as marcas.
 // O localStorage continua como cópia para abrir sem internet.
-const FIREBASE = null;   // configuração do projeto Firebase; null = cada aparelho guarda só para si
+const FIREBASE = {       // projeto radar-rafael; a apiKey é pública, quem protege o banco são as regras
+  apiKey: 'AIzaSyC17ALB6wYrmUdvZG4ExN110cl5nXg37VI',
+  authDomain: 'radar-rafael.firebaseapp.com',
+  databaseURL: 'https://radar-rafael-default-rtdb.firebaseio.com',
+  projectId: 'radar-rafael',
+  appId: '1:373882920911:web:46a061ba25076c9a903cba',
+};
 const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/10.14.1/firebase-';
 let nuvem = null;        // (id, 'salvo' | 'descartado' | null) => grava no banco
 
