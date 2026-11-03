@@ -71,6 +71,7 @@ main { padding: 12px 16px calc(env(safe-area-inset-bottom) + 32px); max-width: 1
 .card.descartado { opacity: .55; }
 .thumb { position: relative; aspect-ratio: 4/3; background: var(--chip); overflow: hidden; }
 .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb::before, .fotos:empty::before { content: "Sem foto"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--suave); font-size: 13px; }
 .selo { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 6px; font-weight: 800; font-size: 13px; color: #fff; background: #0f7a45; }
 .selo.medio { background: #2f7d4f; } .selo.fraco { background: #5b6a60; } .selo.acima { background: #9a6700; }
 .fonte { position: absolute; bottom: 6px; right: 6px; font-size: 10.5px; font-weight: 800; padding: 2px 6px; border-radius: 5px; color: #fff; background: rgba(0,0,0,.55); }
@@ -98,7 +99,7 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
 .fechar { border: 0; background: var(--chip); width: 38px; height: 38px; border-radius: 50%; font-size: 18px; }
 .jan-corpo { padding: 14px 16px calc(env(safe-area-inset-bottom) + 20px); }
 
-.fotos { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; aspect-ratio: 4/3; background: var(--chip); }
+.fotos { position: relative; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; aspect-ratio: 4/3; background: var(--chip); }
 .fotos::-webkit-scrollbar { display: none; }
 .fotos img { flex: none; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
 .fotos-n { text-align: right; color: var(--suave); font-size: 12px; padding: 4px 16px 0; }
@@ -346,7 +347,7 @@ function card(l) {
     : `<span class="margem-p">+${fmt(m)} da FIPE</span>`;
   return `<article class="card ${marcas[l.id] === 'descartado' ? 'descartado' : ''}" data-id="${esc(l.id)}" tabindex="0">
     <div class="thumb">
-      ${l.fotos?.[0] ? `<img src="${esc(l.fotos[0])}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
+      ${l.fotos?.[0] ? `<img src="${esc(l.fotos[0])}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
       ${selo(l)}${ehNovo(l) ? '<span class="novo">NOVO</span>' : ''}
       <span class="fonte ${FONTES[l.fonte]?.classe || ''}">${FONTES[l.fonte]?.nome || 'OLX'}</span>
       <button class="estrela" data-acao="salvo" aria-pressed="${marcas[l.id] === 'salvo'}" aria-label="Salvar">★</button>
@@ -409,7 +410,7 @@ function detalhe(l) {
   ].filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
   const m = marcas[l.id];
   return `<div class="jan-topo"><h2>${esc(nomeCurto(l))} · ${l.ano ?? ''}</h2><button class="fechar" data-fechar aria-label="Fechar">✕</button></div>
-    <div class="fotos">${(l.fotos || []).map(f => `<img src="${esc(f)}" alt="" loading="lazy" referrerpolicy="no-referrer">`).join('')}</div>
+    <div class="fotos">${(l.fotos || []).map(f => `<img src="${esc(f)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`).join('')}</div>
     ${l.fotos?.length > 1 ? `<div class="fotos-n">${l.fotos.length} fotos · arraste para o lado ›</div>` : ''}
     <div class="jan-corpo" data-id="${esc(l.id)}">
       <h3 class="titulo">${esc(l.titulo)}</h3>
